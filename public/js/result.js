@@ -163,16 +163,7 @@
         <div class="tx-muted" style="font-size:13px;margin-top:2px">
           ${tech.technology} · Up to ${tech.max_speed_mbps} Mbps
         </div>
-      </div>
-      <div style="margin-top:16px">
-        <button class="tx-btn tx-btn--ghost tx-btn--sm" id="btn-account-detail">
-          View account details
-        </button>
       </div>`;
-
-    subCard.querySelector('#btn-account-detail').addEventListener('click', () =>
-      goToDetails('details', loc, tech)
-    );
 
     // ── upgrade banner — only when upgrade_eligible is true ───
     if (subscriber.upgrade_eligible) {
@@ -188,7 +179,7 @@
             Faster plans are available at your address. View options →
           </div>
         </div>`;
-      banner.addEventListener('click', () => goToDetails('upgrade', loc, tech));
+      banner.addEventListener('click', () => goToDetails('upgrade', loc, tech, subscriber, products));
       banner.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); banner.click(); }
       });
@@ -227,7 +218,7 @@
         </button>
       </div>`;
     netCard.querySelector('#btn-network-detail').addEventListener('click', () =>
-      goToDetails('network', loc, tech)
+      goToDetails('network', loc, tech, subscriber, network, service)
     );
 
     // ── service status (Tool 6) ───────────────────────────────
@@ -292,11 +283,16 @@
         <button class="tx-btn tx-btn--sm" aria-label="Choose ${p.name} plan">Choose this plan</button>`;
       const btn = card.querySelector('button');
       const goProviders = () => {
-        goToDetails('providers', loc, tech, {
-          pname: p.name,
-          down:  p.down_mbps,
-          up:    p.up_mbps
+        const qs = new URLSearchParams({
+          id:      loc.id,
+          mode:    'providers',
+          tech:    tech.technology,
+          product: p.product_id,
+          pname:   p.name,
+          down:    p.down_mbps,
+          up:      p.up_mbps
         });
+        location.href = `/details.html?${qs}`;
       };
       btn.addEventListener('click', e => { e.stopPropagation(); goProviders(); });
       card.addEventListener('click', goProviders);
@@ -322,16 +318,10 @@
       </div>`).join('');
   }
 
-  // ── navigate to details page (BR-15/16) ─────────────────────
-  // Each mode gets exactly the params details.js needs — no more, no less.
+  // ── navigate to details page ────────────────────────────────
 
-  function goToDetails(mode, loc, tech, extra = {}) {
-    const qs = new URLSearchParams({
-      id:   loc.id,
-      mode,
-      tech: tech ? tech.technology : '',  // network + upgrade + details all need tech
-      ...extra                             // providers mode adds pname, down, up
-    });
+  function goToDetails(mode, loc, tech, ...rest) {
+    const qs = new URLSearchParams({ id: loc.id, mode });
     location.href = `/details.html?${qs}`;
   }
 
