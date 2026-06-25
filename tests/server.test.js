@@ -375,3 +375,111 @@ describe('Back button — history.back() contract: no server-side impact', () =>
     expect(res.body.id).toBe('LOC-001');
   });
 });
+
+// ── Wi-Fi Placement Assistant — POST /api/wifi/analyse ────────────────────────
+
+describe('POST /api/wifi/analyse', () => {
+  const SMALL_IMG = Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+    'base64'
+  ); // 1×1 px PNG
+
+  it('returns 400 when no files are uploaded', async () => {
+    const res = await request(app).post('/api/wifi/analyse');
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('Missing files');
+  });
+
+  it('returns 400 when only modem file is uploaded', async () => {
+    const res = await request(app)
+      .post('/api/wifi/analyse')
+      .attach('modem', SMALL_IMG, 'modem.png');
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('Missing files');
+  });
+
+  it('returns 400 when only floorplan file is uploaded', async () => {
+    const res = await request(app)
+      .post('/api/wifi/analyse')
+      .attach('floorplan', SMALL_IMG, 'floorplan.png');
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('Missing files');
+  });
+
+  it('returns tips and confidence when both files are uploaded', async () => {
+    const res = await request(app)
+      .post('/api/wifi/analyse')
+      .attach('modem',     SMALL_IMG, 'modem.png')
+      .attach('floorplan', SMALL_IMG, 'floorplan.png');
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body.tips)).toBe(true);
+    expect(res.body.tips.length).toBeGreaterThanOrEqual(3);
+    expect(res.body.tips.length).toBeLessThanOrEqual(5);
+    expect(['high', 'medium', 'low']).toContain(res.body.confidence);
+  });
+
+  it('tips are all non-empty strings', async () => {
+    const res = await request(app)
+      .post('/api/wifi/analyse')
+      .attach('modem',     SMALL_IMG, 'modem.png')
+      .attach('floorplan', SMALL_IMG, 'floorplan.png');
+    expect(res.status).toBe(200);
+    res.body.tips.forEach(tip => {
+      expect(typeof tip).toBe('string');
+      expect(tip.length).toBeGreaterThan(10);
+    });
+  });
+
+  it('picks floor-placement tip when modem filename contains "floor"', async () => {
+    const res = await request(app)
+      .post('/api/wifi/analyse')
+      .attach('modem',     SMALL_IMG, 'modem_on_floor.png')
+      .attach('floorplan', SMALL_IMG, 'floorplan.png');
+    expect(res.status).toBe(200);
+    expect(res.body.tips[0]).toMatch(/raise|shelf|table/i);
+  });
+
+  it('picks cupboard tip when modem filename contains "cupboard"', async () => {
+    const res = await request(app)
+      .post('/api/wifi/analyse')
+      .attach('modem',     SMALL_IMG, 'modem_in_cupboard.png')
+      .attach('floorplan', SMALL_IMG, 'floorplan.png');
+    expect(res.status).toBe(200);
+    expect(res.body.tips[0]).toMatch(/cupboard|enclosed|open area/i);
+  });
+
+  it('picks apartment tip when floorplan filename contains "apartment"', async () => {
+    const res = await request(app)
+      .post('/api/wifi/analyse')
+      .attach('modem',     SMALL_IMG, 'modem.png')
+      .attach('floorplan', SMALL_IMG, 'apartment_floorplan.png');
+    expect(res.status).toBe(200);
+    const floorTip = res.body.tips.find(t => /apartment|middle/i.test(t));
+    expect(floorTip).toBeDefined();
+  });
+
+  it('picks two-storey tip when floorplan filename contains "two_storey"', async () => {
+    const res = await request(app)
+      .post('/api/wifi/analyse')
+      .attach('modem',     SMALL_IMG, 'modem.png')
+      .attach('floorplan', SMALL_IMG, 'two_storey_floorplan.png');
+    expect(res.status).toBe(200);
+    const floorTip = res.body.tips.find(t => /storey|level/i.test(t));
+    expect(floorTip).toBeDefined();
+  });
+
+  it('returns confidence=low for very small files', async () => {
+    const res = await request(app)
+      .post('/api/wifi/analyse')
+      .attach('modem',     SMALL_IMG, 'modem.png')
+      .attach('floorplan', SMALL_IMG, 'floorplan.png');
+    expect(res.status).toBe(200);
+    expect(res.body.confidence).toBe('low'); // combined < 100KB
+  });
+
+  it('existing address search endpoint still works (no regression)', async () => {
+    const res = await request(app).get('/api/locations');
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveLength(10);
+  });
+});

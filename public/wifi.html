@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Telco X — Modem Placement Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/wifi.css" />
+</head>
+<body>
+
+  <header class="tx-header">
+    <a href="/index.html" class="tx-logo" aria-label="Telco X — home">TELCO&nbsp;<span>X</span></a>
+    <nav class="tx-nav" aria-label="Main navigation">
+      <a href="/index.html" class="tx-nav__link">Address search</a>
+      <a href="/wifi.html" class="tx-nav__link tx-nav__link--active" aria-current="page">Wi-Fi setup</a>
+    </nav>
+  </header>
+
+  <main class="tx-container" style="max-width:720px">
+
+    <!-- Page heading -->
+    <div class="wifi-hero">
+      <div class="wifi-hero__icon" aria-hidden="true">📡</div>
+      <div>
+        <h1 class="wifi-hero__title">Modem Placement Assistant</h1>
+        <p class="wifi-hero__sub">
+          Upload a photo of your modem and your home floorplan to get
+          personalised placement tips for better Wi-Fi coverage.
+        </p>
+      </div>
+    </div>
+
+    <!-- Privacy note -->
+    <div class="tx-info-chip wifi-privacy" role="note">
+      <span aria-hidden="true">🔒</span>
+      <span>
+        <strong>Privacy note:</strong> Images are used only to generate placement
+        tips in this demo. Do not upload sensitive personal information.
+      </span>
+    </div>
+
+    <!-- Upload form -->
+    <form id="wifi-form" novalidate>
+
+      <!-- Upload 1: Modem photo -->
+      <div class="tx-card wifi-upload-card" id="card-modem">
+        <div class="wifi-upload-card__header">
+          <span class="wifi-upload-card__num" aria-hidden="true">1</span>
+          <div>
+            <h2 class="wifi-upload-card__title">Modem photo</h2>
+            <p class="wifi-upload-card__hint">
+              A photo showing where your modem is currently placed.
+            </p>
+          </div>
+        </div>
+
+        <label class="wifi-drop-zone" id="drop-modem" for="input-modem"
+               tabindex="0" role="button"
+               aria-label="Upload modem photo. Click or drag and drop an image.">
+          <input type="file" id="input-modem" accept="image/*"
+                 aria-label="Choose modem photo" class="wifi-drop-zone__input" />
+          <div class="wifi-drop-zone__body" id="preview-modem">
+            <span class="wifi-drop-zone__icon" aria-hidden="true">📷</span>
+            <span class="wifi-drop-zone__label">Click to upload or drag and drop</span>
+            <span class="wifi-drop-zone__sub">JPG, PNG, HEIC up to 10 MB</span>
+          </div>
+        </label>
+        <p class="wifi-upload-error" id="err-modem" role="alert" hidden></p>
+      </div>
+
+      <!-- Upload 2: Floorplan -->
+      <div class="tx-card wifi-upload-card" id="card-floor">
+        <div class="wifi-upload-card__header">
+          <span class="wifi-upload-card__num" aria-hidden="true">2</span>
+          <div>
+            <h2 class="wifi-upload-card__title">Home floorplan</h2>
+            <p class="wifi-upload-card__hint">
+              A photo or image of your home's floorplan or layout.
+            </p>
+          </div>
+        </div>
+
+        <label class="wifi-drop-zone" id="drop-floor" for="input-floor"
+               tabindex="0" role="button"
+               aria-label="Upload floorplan image. Click or drag and drop an image.">
+          <input type="file" id="input-floor" accept="image/*"
+                 aria-label="Choose floorplan image" class="wifi-drop-zone__input" />
+          <div class="wifi-drop-zone__body" id="preview-floor">
+            <span class="wifi-drop-zone__icon" aria-hidden="true">🏠</span>
+            <span class="wifi-drop-zone__label">Click to upload or drag and drop</span>
+            <span class="wifi-drop-zone__sub">JPG, PNG, PDF up to 10 MB</span>
+          </div>
+        </label>
+        <p class="wifi-upload-error" id="err-floor" role="alert" hidden></p>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="tx-btn tx-btn--full wifi-submit" id="btn-submit"
+              disabled aria-describedby="submit-hint">
+        Get placement tips
+      </button>
+      <p class="wifi-submit-hint tx-muted" id="submit-hint">
+        Upload both images to continue.
+      </p>
+
+    </form>
+
+    <!-- Loading state -->
+    <div id="wifi-loading" class="wifi-loading" hidden aria-live="polite" aria-label="Loading">
+      <div class="wifi-loading__spinner" aria-hidden="true"></div>
+      <p class="wifi-loading__label">Analysing your home setup…</p>
+    </div>
+
+    <!-- Results section -->
+    <section id="wifi-results" class="wifi-results" hidden aria-live="polite">
+
+      <div class="wifi-results__header">
+        <h2 class="wifi-results__title">Your Wi-Fi placement tips</h2>
+        <span class="wifi-confidence" id="wifi-confidence"></span>
+      </div>
+
+      <ol class="wifi-tips" id="wifi-tips" aria-label="Placement tips"></ol>
+
+      <div class="wifi-disclaimer" role="note">
+        <span aria-hidden="true">ℹ️</span>
+        <p>
+          <strong>Note:</strong> These tips are indicative only. Actual Wi-Fi
+          performance may depend on walls, building materials, device type, and
+          network conditions.
+        </p>
+      </div>
+
+      <div class="wifi-ai-note tx-card" role="note">
+        <h3 class="wifi-ai-note__title">How this works</h3>
+        <p class="wifi-ai-note__body">
+          This demo uses <strong>rule-based mock logic</strong> — tips are
+          selected based on simulated analysis of your image filenames and
+          sizes. In production, this would be replaced by a real
+          <strong>AI vision model</strong> (such as Claude's vision API) that
+          reads the actual image content, detects modem position, room layout,
+          wall types, and multi-storey indicators, then generates context-aware
+          recommendations in real time.
+        </p>
+      </div>
+
+      <button class="tx-btn tx-btn--ghost wifi-reset" id="btn-reset">
+        ← Check another setup
+      </button>
+
+    </section>
+
+  </main>
+
+  <script src="/js/wifi.js"></script>
+</body>
+</html>

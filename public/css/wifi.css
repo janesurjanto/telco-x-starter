@@ -1,0 +1,336 @@
+/* Telco X — Modem Placement Assistant styles (wifi.html)
+   Builds on components.css tokens. No overrides to existing rules. */
+
+/* ── Nav links in header ─────────────────────────────────────── */
+.tx-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+.tx-nav__link {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, .6);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: var(--tx-radius-md, 8px);
+  transition: color .15s, background .15s;
+  white-space: nowrap;
+}
+.tx-nav__link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, .08);
+}
+.tx-nav__link--active {
+  color: #fff;
+  background: rgba(20, 110, 245, .25);
+}
+
+/* ── Page hero ───────────────────────────────────────────────── */
+.wifi-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 32px 0 20px;
+}
+.wifi-hero__icon {
+  font-size: 36px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.wifi-hero__title {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  color: var(--tx-ink, #172B4D);
+}
+.wifi-hero__sub {
+  font-size: 15px;
+  color: var(--tx-muted, #5F6B7A);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Privacy chip ────────────────────────────────────────────── */
+.wifi-privacy {
+  margin-bottom: 24px;
+  align-items: flex-start;
+}
+
+/* ── Upload card ─────────────────────────────────────────────── */
+.wifi-upload-card {
+  margin-bottom: 16px;
+}
+.wifi-upload-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.wifi-upload-card__num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--tx-blue, #146EF5);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.wifi-upload-card__title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+.wifi-upload-card__hint {
+  font-size: 13px;
+  color: var(--tx-muted, #5F6B7A);
+  margin: 0;
+}
+
+/* ── Drop zone ───────────────────────────────────────────────── */
+.wifi-drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--tx-border, #D9E2EC);
+  border-radius: var(--tx-radius-md, 8px);
+  padding: 32px 16px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  text-align: center;
+  position: relative;
+  min-height: 140px;
+}
+.wifi-drop-zone:hover,
+.wifi-drop-zone:focus-visible {
+  border-color: var(--tx-blue, #146EF5);
+  background: rgba(20, 110, 245, .03);
+  outline: none;
+}
+.wifi-drop-zone--has-file {
+  border-color: var(--rag-green-fg, #1B7F55);
+  background: var(--rag-green-bg, #E6F7EF);
+}
+.wifi-drop-zone--dragover {
+  border-color: var(--tx-blue, #146EF5);
+  background: rgba(20, 110, 245, .06);
+}
+.wifi-drop-zone__input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.wifi-drop-zone__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+.wifi-drop-zone__icon { font-size: 28px; }
+.wifi-drop-zone__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tx-ink, #172B4D);
+}
+.wifi-drop-zone__sub {
+  font-size: 12px;
+  color: var(--tx-muted, #5F6B7A);
+}
+
+/* ── Thumbnail preview ───────────────────────────────────────── */
+.wifi-thumb {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.wifi-thumb-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rag-green-fg, #1B7F55);
+}
+.wifi-thumb-size {
+  font-size: 12px;
+  color: var(--tx-muted, #5F6B7A);
+  margin-top: 2px;
+}
+
+/* ── Upload error ────────────────────────────────────────────── */
+.wifi-upload-error {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rag-red-fg, #B8322A);
+  margin: 8px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.wifi-upload-error::before { content: "⚠"; }
+
+/* ── Submit button & hint ────────────────────────────────────── */
+.wifi-submit {
+  margin-top: 8px;
+  font-size: 16px;
+}
+.wifi-submit:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+.wifi-submit-hint {
+  font-size: 13px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* ── Loading state ───────────────────────────────────────────── */
+.wifi-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 48px 24px;
+  text-align: center;
+}
+.wifi-loading[hidden] { display: none; }
+.wifi-loading__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--tx-border, #D9E2EC);
+  border-top-color: var(--tx-blue, #146EF5);
+  border-radius: 50%;
+  animation: wifi-spin .8s linear infinite;
+}
+@keyframes wifi-spin { to { transform: rotate(360deg); } }
+.wifi-loading__label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tx-muted, #5F6B7A);
+  margin: 0;
+}
+
+/* ── Results ─────────────────────────────────────────────────── */
+.wifi-results[hidden] { display: none; }
+
+.wifi-results__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.wifi-results__title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Confidence badge */
+.wifi-confidence {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.wifi-confidence--high   { background: var(--rag-green-bg, #E6F7EF); color: var(--rag-green-fg, #1B7F55); }
+.wifi-confidence--medium { background: var(--rag-amber-bg, #FFF4E0); color: var(--rag-amber-fg, #A85D00); }
+.wifi-confidence--low    { background: var(--rag-red-bg, #FDECEB);   color: var(--rag-red-fg, #B8322A); }
+
+/* Tips list */
+.wifi-tips {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  counter-reset: tip-counter;
+}
+.wifi-tips__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--tx-surface, #fff);
+  border: 1px solid var(--tx-border, #D9E2EC);
+  border-radius: var(--tx-radius-md, 8px);
+  padding: 14px 16px;
+  box-shadow: var(--tx-shadow, 0 1px 3px rgba(16,42,67,.08));
+  counter-increment: tip-counter;
+}
+.wifi-tips__num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--tx-blue, #146EF5);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.wifi-tips__text {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--tx-ink, #172B4D);
+}
+
+/* Disclaimer */
+.wifi-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--rag-amber-bg, #FFF4E0);
+  border: 1px solid rgba(168, 93, 0, .2);
+  border-radius: var(--tx-radius-md, 8px);
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--rag-amber-fg, #A85D00);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.wifi-disclaimer p { margin: 0; }
+
+/* AI explanation card */
+.wifi-ai-note {
+  margin-bottom: 24px;
+}
+.wifi-ai-note__title {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--tx-ink, #172B4D);
+}
+.wifi-ai-note__body {
+  font-size: 13px;
+  color: var(--tx-muted, #5F6B7A);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Reset button */
+.wifi-reset { margin-top: 8px; }
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .wifi-hero { flex-direction: column; gap: 10px; }
+  .wifi-hero__title { font-size: 22px; }
+  .tx-nav__link { padding: 6px 8px; font-size: 12px; }
+}

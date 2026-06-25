@@ -4,10 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Telco X — Check your address</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/wifi.css" />
 </head>
 <body>
-  <header class="tx-header"><span class="tx-logo">TELCO&nbsp;X</span></header>
+  <header class="tx-header">
+    <a href="/index.html" class="tx-logo" aria-label="Telco X — home">TELCO&nbsp;<span>X</span></a>
+    <nav class="tx-nav" aria-label="Main navigation">
+      <a href="/index.html" class="tx-nav__link tx-nav__link--active" aria-current="page">Address search</a>
+      <a href="/wifi.html" class="tx-nav__link">Wi-Fi setup</a>
+    </nav>
+  </header>
   <main class="tx-container">
     <h1>Check what's available at your address</h1>
     <p class="tx-muted">Search one of the known addresses, or pick from the list below.</p>
