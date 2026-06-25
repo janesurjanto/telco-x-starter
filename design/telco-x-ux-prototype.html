@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Telco X — UX Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS — from DESIGN_SYSTEM.md + styles.css
+═══════════════════════════════════════════ */
+:root {
+  --tx-navy:       #102A43;
+  --tx-blue:       #146EF5;
+  --tx-aqua:       #007F7D;
+  --tx-bg:         #F5F8FC;
+  --tx-surface:    #FFFFFF;
+  --tx-ink:        #172B4D;
+  --tx-muted:      #5F6B7A;
+  --tx-border:     #D9E2EC;
+  --tx-success:    #1B7F55;
+  --tx-warning:    #A85D00;
+  --tx-danger:     #B8322A;
+  --tx-radius-lg:  12px;
+  --tx-radius-md:  8px;
+  --tx-shadow:     0 1px 3px rgba(16,42,67,.08), 0 4px 16px rgba(16,42,67,.06);
+  --tx-shadow-lg:  0 8px 32px rgba(16,42,67,.14);
+  --tx-font:       'Inter', Arial, Helvetica, sans-serif;
+  --tx-max:        1120px;
+  /* RAG semantic colours */
+  --rag-green-bg:  #E6F7EF;
+  --rag-green-fg:  #1B7F55;
+  --rag-amber-bg:  #FFF4E0;
+  --rag-amber-fg:  #A85D00;
+  --rag-red-bg:    #FDECEB;
+  --rag-red-fg:    #B8322A;
+}
+
+/* ═══════════ RESET & BASE ═══════════ */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0; font-family: var(--tx-font);
+  color: var(--tx-ink); background: var(--tx-bg);
+  line-height: 1.5; font-size: 16px;
+}
+h1,h2,h3,h4 { margin: 0; }
+p { margin: 0; }
+button { font-family: inherit; cursor: pointer; }
+a { color: var(--tx-blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ═══════════ SCREEN MANAGEMENT ═══════════ */
+.screen { display: none; min-height: 100vh; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ═══════════ HEADER ═══════════ */
+.tx-header {
+  background: var(--tx-navy);
+  padding: 0 24px;
+  height: 56px;
+  display: flex; align-items: center;
+  position: sticky; top: 0; z-index: 100;
+  flex-shrink: 0;
+}
+.tx-logo {
+  font-size: 18px; font-weight: 700;
+  color: #FFFFFF; letter-spacing: 1px;
+  cursor: pointer;
+}
+.tx-logo span { color: var(--tx-blue); }
+.tx-header-right { margin-left: auto; color: rgba(255,255,255,.5); font-size: 13px; }
+
+/* ═══════════ LAYOUT ═══════════ */
+.tx-container {
+  max-width: var(--tx-max); margin: 0 auto;
+  padding: 40px 24px 80px; width: 100%;
+}
+.tx-container--narrow {
+  max-width: 640px; margin: 0 auto;
+  padding: 40px 24px 80px; width: 100%;
+}
+
+/* ═══════════ CARD ═══════════ */
+.tx-card {
+  background: var(--tx-surface);
+  border: 1px solid var(--tx-border);
+  border-radius: var(--tx-radius-lg);
+  box-shadow: var(--tx-shadow);
+  padding: 24px;
+}
+.tx-card + .tx-card { margin-top: 16px; }
+.tx-card--hover { cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+.tx-card--hover:hover { border-color: var(--tx-blue); box-shadow: var(--tx-shadow-lg); }
+.tx-card--hover:focus-within { outline: 2px solid var(--tx-blue); outline-offset: 2px; }
+
+/* ═══════════ BUTTONS ═══════════ */
+.tx-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 11px 20px; font-size: 15px; font-weight: 600;
+  border: none; border-radius: var(--tx-radius-md);
+  background: var(--tx-blue); color: #fff;
+  min-height: 44px; min-width: 44px;
+  transition: background .15s, box-shadow .15s;
+}
+.tx-btn:hover { background: #0F5ED4; box-shadow: 0 2px 8px rgba(20,110,245,.25); }
+.tx-btn:focus-visible { outline: 2px solid var(--tx-navy); outline-offset: 2px; }
+.tx-btn--ghost {
+  background: transparent; color: var(--tx-blue);
+  border: 1px solid var(--tx-blue);
+}
+.tx-btn--ghost:hover { background: rgba(20,110,245,.06); box-shadow: none; }
+.tx-btn--sm { padding: 7px 14px; font-size: 14px; min-height: 36px; }
+.tx-btn--full { width: 100%; }
+.tx-btn--aqua { background: var(--tx-aqua); }
+.tx-btn--aqua:hover { background: #006A68; }
+
+/* ═══════════ FORM ELEMENTS ═══════════ */
+.tx-field-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.tx-label { font-size: 14px; font-weight: 600; color: var(--tx-ink); }
+.tx-field {
+  width: 100%; padding: 12px 14px; font-size: 15px;
+  border: 1px solid var(--tx-border); border-radius: var(--tx-radius-md);
+  background: var(--tx-surface); color: var(--tx-ink);
+  min-height: 44px; transition: border-color .15s;
+}
+.tx-field:focus { outline: 2px solid var(--tx-blue); outline-offset: 1px; border-color: var(--tx-blue); }
+.tx-field--error { border-color: var(--tx-danger); }
+.tx-field--error:focus { outline-color: var(--tx-danger); }
+.tx-error-msg {
+  color: var(--tx-danger); font-size: 14px; font-weight: 600;
+  display: flex; align-items: center; gap: 6px;
+}
+.tx-error-msg::before { content: "⚠"; }
+
+/* ═══════════ AUTOCOMPLETE ═══════════ */
+.tx-autocomplete {
+  position: relative;
+}
+.tx-suggestions {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--tx-surface); border: 1px solid var(--tx-border);
+  border-radius: var(--tx-radius-md); box-shadow: var(--tx-shadow-lg);
+  z-index: 200; max-height: 280px; overflow-y: auto;
+  display: none;
+}
+.tx-suggestions.open { display: block; }
+.tx-suggestion {
+  padding: 12px 16px; cursor: pointer;
+  font-size: 14px; border-bottom: 1px solid var(--tx-border);
+  transition: background .1s;
+}
+.tx-suggestion:last-child { border-bottom: none; }
+.tx-suggestion:hover, .tx-suggestion:focus, .tx-suggestion[aria-selected="true"] {
+  background: rgba(20,110,245,.07);
+}
+.tx-suggestion strong { color: var(--tx-blue); }
+.tx-suggestion .tx-sug-meta { color: var(--tx-muted); font-size: 13px; }
+
+/* ═══════════ RAG BADGE ═══════════ */
+.tx-rag {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 12px; border-radius: 100px;
+  font-size: 13px; font-weight: 600;
+}
+.tx-rag__dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.tx-rag--green { background: var(--rag-green-bg); color: var(--rag-green-fg); }
+.tx-rag--green .tx-rag__dot { background: var(--rag-green-fg); }
+.tx-rag--amber { background: var(--rag-amber-bg); color: var(--rag-amber-fg); }
+.tx-rag--amber .tx-rag__dot { background: var(--rag-amber-fg); }
+.tx-rag--red { background: var(--rag-red-bg); color: var(--rag-red-fg); }
+.tx-rag--red .tx-rag__dot { background: var(--rag-red-fg); }
+
+/* ═══════════ CONNECTION BADGE ═══════════ */
+.tx-conn-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border-radius: 100px;
+  font-size: 13px; font-weight: 600;
+}
+.tx-conn-badge--active   { background: var(--rag-green-bg); color: var(--rag-green-fg); }
+.tx-conn-badge--previous { background: var(--rag-amber-bg); color: var(--rag-amber-fg); }
+.tx-conn-badge--never    { background: #EEF3FF; color: var(--tx-blue); }
+.tx-conn-badge__icon { font-size: 14px; }
+
+/* ═══════════ MAP PANEL ═══════════ */
+.tx-map {
+  position: relative; background: #e2eaf4;
+  border-radius: var(--tx-radius-lg); overflow: hidden;
+  border: 1px solid var(--tx-border);
+  aspect-ratio: 16/9; max-height: 220px;
+}
+.tx-map__grid {
+  width: 100%; height: 100%;
+  background-image:
+    linear-gradient(rgba(20,110,245,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20,110,245,.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.tx-map__roads {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.6) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255,255,255,.6) 2px, transparent 2px),
+    linear-gradient(rgba(255,255,255,.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.35) 1px, transparent 1px);
+  background-size: 128px 128px, 128px 128px, 32px 32px, 32px 32px;
+}
+.tx-map__pin {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -100%);
+  display: flex; flex-direction: column; align-items: center;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 6px rgba(16,42,67,.3));
+}
+.tx-map__pin-head {
+  width: 32px; height: 32px; border-radius: 50% 50% 50% 0;
+  background: var(--tx-blue); transform: rotate(-45deg);
+  display: flex; align-items: center; justify-content: center;
+}
+.tx-map__pin-inner {
+  width: 12px; height: 12px; background: white;
+  border-radius: 50%; transform: rotate(45deg);
+}
+.tx-map__label {
+  position: absolute; bottom: 12px; left: 12px;
+  background: rgba(255,255,255,.95); border: 1px solid var(--tx-border);
+  border-radius: 6px; padding: 6px 10px;
+  font-size: 12px; color: var(--tx-muted);
+  backdrop-filter: blur(4px);
+}
+
+/* ═══════════ ADDRESS STRIP ═══════════ */
+.tx-address-strip {
+  background: var(--tx-navy);
+  color: white; padding: 20px 24px;
+  border-radius: var(--tx-radius-lg); margin-bottom: 24px;
+  display: flex; align-items: flex-start; gap: 16px;
+}
+.tx-address-strip__pin {
+  width: 40px; height: 40px; background: var(--tx-blue);
+  border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 18px; flex-shrink: 0; margin-top: 2px;
+}
+.tx-address-strip__text h2 {
+  font-size: 20px; font-weight: 700; color: white; margin-bottom: 4px;
+}
+.tx-address-strip__text p { color: rgba(255,255,255,.65); font-size: 14px; }
+
+/* ═══════════ GRID ═══════════ */
+.tx-grid-2 {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+@media (max-width: 680px) { .tx-grid-2 { grid-template-columns: 1fr; } }
+
+/* ═══════════ SECTION LABEL ═══════════ */
+.tx-section-label {
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  color: var(--tx-muted); text-transform: uppercase; margin-bottom: 12px;
+}
+
+/* ═══════════ STAT ROW ═══════════ */
+.tx-stat-row {
+  display: flex; gap: 24px; flex-wrap: wrap;
+}
+.tx-stat { display: flex; flex-direction: column; gap: 2px; }
+.tx-stat__val { font-size: 22px; font-weight: 700; color: var(--tx-ink); }
+.tx-stat__val span { font-size: 13px; font-weight: 500; color: var(--tx-muted); }
+.tx-stat__label { font-size: 12px; color: var(--tx-muted); font-weight: 500; }
+
+/* ═══════════ STATUS ROW ═══════════ */
+.tx-status-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0; border-bottom: 1px solid var(--tx-border);
+}
+.tx-status-row:last-child { border-bottom: none; padding-bottom: 0; }
+.tx-status-row__label { font-size: 14px; font-weight: 500; color: var(--tx-muted); }
+
+/* ═══════════ PRODUCT CARD ═══════════ */
+.tx-product-card {
+  background: var(--tx-surface); border: 1px solid var(--tx-border);
+  border-radius: var(--tx-radius-lg); padding: 20px;
+  cursor: pointer; transition: border-color .15s, box-shadow .15s;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.tx-product-card:hover { border-color: var(--tx-blue); box-shadow: var(--tx-shadow-lg); }
+.tx-product-card:focus-within { outline: 2px solid var(--tx-blue); }
+.tx-product-card__name { font-size: 16px; font-weight: 700; }
+.tx-product-card__speed {
+  font-size: 28px; font-weight: 700; color: var(--tx-blue);
+}
+.tx-product-card__speed small { font-size: 13px; font-weight: 500; color: var(--tx-muted); }
+.tx-product-card__meta { font-size: 13px; color: var(--tx-muted); }
+.tx-product-card__tech {
+  display: inline-block; background: rgba(0,127,125,.1);
+  color: var(--tx-aqua); font-size: 12px; font-weight: 600;
+  padding: 3px 8px; border-radius: 4px;
+}
+
+/* ═══════════ PROVIDER ROW ═══════════ */
+.tx-provider-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 0; border-bottom: 1px solid var(--tx-border);
+}
+.tx-provider-row:last-child { border-bottom: none; }
+.tx-provider-row__name { font-weight: 600; font-size: 15px; }
+.tx-provider-row__plan { font-size: 13px; color: var(--tx-muted); margin-top: 2px; }
+
+/* ═══════════ BACK LINK ═══════════ */
+.tx-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 14px; font-weight: 600; color: var(--tx-blue);
+  padding: 8px 0; margin-bottom: 20px;
+  background: none; border: none; cursor: pointer;
+  min-height: 44px;
+}
+.tx-back:hover { opacity: .75; }
+.tx-back:focus-visible { outline: 2px solid var(--tx-blue); border-radius: 4px; }
+
+/* ═══════════ ADDRESS LIST ═══════════ */
+.tx-address-list { margin-top: 24px; }
+.tx-address-item {
+  background: var(--tx-surface); border: 1px solid var(--tx-border);
+  border-radius: var(--tx-radius-md); padding: 14px 16px;
+  margin-bottom: 8px; cursor: pointer;
+  display: flex; align-items: center; gap: 12px;
+  transition: border-color .15s, box-shadow .15s;
+  min-height: 44px;
+}
+.tx-address-item:hover { border-color: var(--tx-blue); box-shadow: var(--tx-shadow); }
+.tx-address-item:focus { outline: 2px solid var(--tx-blue); border-color: var(--tx-blue); }
+.tx-address-item__pin { color: var(--tx-blue); font-size: 16px; flex-shrink: 0; }
+.tx-address-item__text { flex: 1; }
+.tx-address-item__street { font-weight: 600; font-size: 14px; }
+.tx-address-item__sub { font-size: 13px; color: var(--tx-muted); }
+.tx-address-item__badge { flex-shrink: 0; }
+
+/* ═══════════ DIVIDER ═══════════ */
+.tx-divider { height: 1px; background: var(--tx-border); margin: 24px 0; }
+
+/* ═══════════ TOAST ═══════════ */
+.tx-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--tx-navy); color: white;
+  padding: 12px 20px; border-radius: var(--tx-radius-md);
+  font-size: 14px; font-weight: 600; z-index: 9999;
+  box-shadow: var(--tx-shadow-lg); transition: opacity .3s;
+  pointer-events: none; opacity: 0;
+}
+.tx-toast.show { opacity: 1; }
+
+/* ═══════════ MODAL OVERLAY ═══════════ */
+.tx-modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(16,42,67,.45); z-index: 500;
+  align-items: center; justify-content: center; padding: 16px;
+}
+.tx-modal-overlay.open { display: flex; }
+.tx-modal {
+  background: var(--tx-surface); border-radius: var(--tx-radius-lg);
+  box-shadow: var(--tx-shadow-lg); width: 100%; max-width: 460px;
+  padding: 28px; position: relative;
+}
+.tx-modal__close {
+  position: absolute; top: 16px; right: 16px;
+  background: none; border: none; font-size: 20px;
+  color: var(--tx-muted); cursor: pointer; min-height: 44px; min-width: 44px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+}
+.tx-modal__close:hover { background: var(--tx-bg); }
+.tx-modal__close:focus-visible { outline: 2px solid var(--tx-blue); }
+.tx-modal__title { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+.tx-modal__body { font-size: 15px; color: var(--tx-muted); margin-bottom: 24px; line-height: 1.6; }
+
+/* ═══════════ UPGRADE BANNER ═══════════ */
+.tx-upgrade-banner {
+  background: linear-gradient(135deg, var(--tx-navy) 0%, #1a4270 100%);
+  border-radius: var(--tx-radius-lg); padding: 20px 24px;
+  display: flex; align-items: center; gap: 16px; margin-bottom: 16px;
+}
+.tx-upgrade-banner__icon { font-size: 28px; flex-shrink: 0; }
+.tx-upgrade-banner__text h3 { color: white; font-size: 16px; margin-bottom: 4px; }
+.tx-upgrade-banner__text p { color: rgba(255,255,255,.7); font-size: 13px; }
+
+/* ═══════════ EMPTY STATE ═══════════ */
+.tx-empty { text-align: center; padding: 48px 24px; color: var(--tx-muted); }
+.tx-empty__icon { font-size: 40px; margin-bottom: 12px; }
+.tx-empty__title { font-size: 18px; font-weight: 700; color: var(--tx-ink); margin-bottom: 6px; }
+
+/* ═══════════ PAGE 1 HERO ═══════════ */
+.tx-hero {
+  background: linear-gradient(160deg, var(--tx-navy) 0%, #1B4480 100%);
+  padding: 48px 24px; text-align: center; color: white;
+}
+.tx-hero h1 { font-size: 32px; font-weight: 700; margin-bottom: 10px; line-height: 1.2; }
+.tx-hero p { font-size: 16px; color: rgba(255,255,255,.7); max-width: 520px; margin: 0 auto; }
+@media (max-width: 480px) { .tx-hero h1 { font-size: 26px; } }
+
+/* ═══════════ SEARCH BOX ON HERO ═══════════ */
+.tx-search-box {
+  max-width: 560px; margin: 32px auto 0;
+  background: var(--tx-surface); border-radius: var(--tx-radius-lg);
+  padding: 24px; box-shadow: var(--tx-shadow-lg);
+}
+
+/* ═══════════ TECH TAG ═══════════ */
+.tx-tech-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(0,127,125,.1); color: var(--tx-aqua);
+  font-size: 12px; font-weight: 700; padding: 4px 10px;
+  border-radius: 4px; letter-spacing: .02em;
+}
+
+/* ═══════════ PILLS ═══════════ */
+.tx-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.tx-pill {
+  padding: 6px 14px; border-radius: 100px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: 1px solid var(--tx-border); background: var(--tx-surface);
+  color: var(--tx-muted); transition: all .15s; min-height: 36px;
+}
+.tx-pill:hover, .tx-pill.active {
+  background: var(--tx-blue); color: white; border-color: var(--tx-blue);
+}
+
+/* ═══════════ PROTOTYPE BANNER ═══════════ */
+.tx-proto-banner {
+  background: #FFF8E1; border-bottom: 1px solid #FFD740;
+  padding: 8px 16px; font-size: 12px; color: #6D4C00;
+  text-align: center; font-weight: 600;
+}
+
+/* ═══════════ INFO CHIP ═══════════ */
+.tx-info-chip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border-radius: var(--tx-radius-md);
+  background: rgba(20,110,245,.06); border: 1px solid rgba(20,110,245,.15);
+  font-size: 13px; color: var(--tx-blue); font-weight: 500;
+}
+.tx-info-chip__icon { flex-shrink: 0; }
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media (max-width: 480px) {
+  .tx-container { padding: 24px 16px 60px; }
+  .tx-card { padding: 16px; }
+  .tx-address-strip { padding: 16px; }
+  .tx-stat-row { gap: 16px; }
+  .tx-stat__val { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- PROTOTYPE NOTICE -->
+<div class="tx-proto-banner">
+  🎨 UX Prototype — All data sourced from tool1–7 JSON files. No backend required.
+</div>
+
+<!-- ══════════════════════════════
+  PAGE 1 — SEARCH
+══════════════════════════════ -->
+<div id="page1" class="screen active">
+  <header class="tx-header">
+    <div class="tx-logo">TELCO<span>&nbsp;X</span></div>
+    <div class="tx-header-right">Service Availability</div>
+  </header>
+
+  <div class="tx-hero">
+    <h1>Check what's available at your address</h1>
+    <p>See your connection status, network health, and available plans — in seconds.</p>
+
+    <div class="tx-search-box">
+      <div class="tx-field-group">
+        <label for="p1-search" class="tx-label">Address search</label>
+        <div class="tx-autocomplete">
+          <input id="p1-search" class="tx-field" type="search"
+            placeholder="e.g. Brunswick, 3056, Eucalyptus…"
+            autocomplete="off"
+            aria-label="Search an address"
+            aria-autocomplete="list"
+            aria-controls="p1-suggestions"
+            aria-describedby="p1-error"/>
+          <div id="p1-suggestions" class="tx-suggestions" role="listbox" aria-label="Address suggestions"></div>
+        </div>
+        <p id="p1-error" class="tx-error-msg" role="alert" hidden></p>
+      </div>
+      <button class="tx-btn tx-btn--full" onclick="handleSearch()">Check address</button>
+    </div>
+  </div>
+
+  <div class="tx-container">
+    <p class="tx-section-label">Or choose from all 10 addresses</p>
+    <div id="p1-address-list" class="tx-address-list" role="list"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+  PAGE 2 — RESULT
+══════════════════════════════ -->
+<div id="page2" class="screen">
+  <header class="tx-header">
+    <div class="tx-logo" onclick="goHome()" style="cursor:pointer">TELCO<span>&nbsp;X</span></div>
+    <div class="tx-header-right">Service Availability</div>
+  </header>
+
+  <div class="tx-container">
+    <button class="tx-back" onclick="goHome()" aria-label="Back to address search">
+      ← Back to search
+    </button>
+
+    <!-- Address + map -->
+    <div id="p2-address-strip" class="tx-address-strip">
+      <div class="tx-address-strip__pin" aria-hidden="true">📍</div>
+      <div class="tx-address-strip__text">
+        <h2 id="p2-address-text">Loading…</h2>
+        <p id="p2-address-meta"></p>
+      </div>
+    </div>
+
+    <div class="tx-map" id="p2-map" role="img" aria-label="Map placeholder — address pin shown">
+      <div class="tx-map__grid"></div>
+      <div class="tx-map__roads"></div>
+      <div class="tx-map__pin" aria-hidden="true">
+        <div class="tx-map__pin-head"><div class="tx-map__pin-inner"></div></div>
+      </div>
+      <div class="tx-map__label" id="p2-coords"></div>
+    </div>
+
+    <div style="height:24px"></div>
+
+    <!-- Content injected by JS -->
+    <div id="p2-content"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+  PAGE 3 — DETAILS / PROVIDERS
+══════════════════════════════ -->
+<div id="page3" class="screen">
+  <header class="tx-header">
+    <div class="tx-logo" onclick="goHome()" style="cursor:pointer">TELCO<span>&nbsp;X</span></div>
+    <div class="tx-header-right">Service Availability</div>
+  </header>
+
+  <div class="tx-container">
+    <button class="tx-back" id="p3-back" aria-label="Back to address result">
+      ← Back to result
+    </button>
+    <div id="p3-content"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="tx-modal" class="tx-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="tx-modal">
+    <button class="tx-modal__close" onclick="closeModal()" aria-label="Close">✕</button>
+    <div class="tx-modal__title" id="modal-title"></div>
+    <div class="tx-modal__body" id="modal-body"></div>
+    <button class="tx-btn tx-btn--full" onclick="closeModal()">Done</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="tx-toast" class="tx-toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ══════════════════════════════
+   DATA — sourced from tool1–7 JSON files
+══════════════════════════════ */
+const LOCATIONS = [
+  { id:"LOC-001", address:"12 Marngo Street",      suburb:"Brunswick",    state:"VIC", postcode:"3056", lat:-37.7665, lng:144.9596, status:"active"   },
+  { id:"LOC-002", address:"88 Eucalyptus Drive",   suburb:"Carlton",      state:"VIC", postcode:"3053", lat:-37.8001, lng:144.9670, status:"active"   },
+  { id:"LOC-003", address:"5 Wattle Court",        suburb:"Fitzroy",      state:"VIC", postcode:"3065", lat:-37.7980, lng:144.9780, status:"active"   },
+  { id:"LOC-004", address:"240 Riverside Esplanade",suburb:"Docklands",   state:"VIC", postcode:"3008", lat:-37.8150, lng:144.9460, status:"active"   },
+  { id:"LOC-005", address:"17 Banksia Lane",       suburb:"Northcote",    state:"VIC", postcode:"3070", lat:-37.7700, lng:144.9990, status:"previous" },
+  { id:"LOC-006", address:"9 Gumtree Parade",      suburb:"Preston",      state:"VIC", postcode:"3072", lat:-37.7410, lng:145.0000, status:"previous" },
+  { id:"LOC-007", address:"134 Harbour View Road", suburb:"Williamstown", state:"VIC", postcode:"3016", lat:-37.8640, lng:144.8970, status:"never"    },
+  { id:"LOC-008", address:"22 Coastal Way",        suburb:"St Kilda",     state:"VIC", postcode:"3182", lat:-37.8680, lng:144.9810, status:"never"    },
+  { id:"LOC-009", address:"6 Highland Terrace",    suburb:"Kew",          state:"VIC", postcode:"3101", lat:-37.8060, lng:145.0310, status:"previous" },
+  { id:"LOC-010", address:"301 Parkland Avenue",   suburb:"Richmond",     state:"VIC", postcode:"3121", lat:-37.8230, lng:144.9980, status:"never"    }
+];
+
+const TECHNOLOGY = {
+  "LOC-001":{tech:"FTTP",max:1000},"LOC-002":{tech:"HFC",max:250},
+  "LOC-003":{tech:"FTTN",max:100},"LOC-004":{tech:"FTTP",max:1000},
+  "LOC-005":{tech:"FTTC",max:250},"LOC-006":{tech:"HFC",max:250},
+  "LOC-007":{tech:"FTTP",max:1000},"LOC-008":{tech:"Fixed Wireless",max:100},
+  "LOC-009":{tech:"FTTN",max:100},"LOC-010":{tech:"FTTC",max:250}
+};
+
+const PRODUCTS = {
+  "FTTP":[
+    {id:"P-FTTP-50",  name:"Essential", down:50,  up:20},
+    {id:"P-FTTP-100", name:"Family",    down:100, up:20},
+    {id:"P-FTTP-250", name:"Power",     down:250, up:25},
+    {id:"P-FTTP-500", name:"Power Plus",down:500, up:50},
+    {id:"P-FTTP-1000",name:"Ultra",     down:1000,up:50}
+  ],
+  "HFC":[
+    {id:"P-HFC-50",  name:"Essential",down:50, up:20},
+    {id:"P-HFC-100", name:"Family",   down:100,up:20},
+    {id:"P-HFC-250", name:"Power",    down:250,up:25}
+  ],
+  "FTTN":[
+    {id:"P-FTTN-25", name:"Basic",    down:25, up:5},
+    {id:"P-FTTN-50", name:"Essential",down:50, up:20},
+    {id:"P-FTTN-100",name:"Family",   down:100,up:40}
+  ],
+  "FTTC":[
+    {id:"P-FTTC-50", name:"Essential",down:50, up:20},
+    {id:"P-FTTC-100",name:"Family",   down:100,up:20},
+    {id:"P-FTTC-250",name:"Power",    down:250,up:25}
+  ],
+  "Fixed Wireless":[
+    {id:"P-FW-50", name:"Essential",down:50, up:20},
+    {id:"P-FW-100",name:"Family",    down:100,up:20}
+  ]
+};
+
+const SUBSCRIBERS = {
+  "LOC-001":{ref:"ACC-7741",product:"Ultra",    productId:"P-FTTP-1000",since:"2021-03-14",upgrade:false},
+  "LOC-002":{ref:"ACC-8820",product:"Family",   productId:"P-HFC-100",  since:"2022-09-02",upgrade:true},
+  "LOC-003":{ref:"ACC-3155",product:"Essential",productId:"P-FTTN-50",  since:"2020-06-21",upgrade:true},
+  "LOC-004":{ref:"ACC-9032",product:"Power Plus",productId:"P-FTTP-500",since:"2023-01-11",upgrade:false}
+};
+
+const NETWORK = {
+  "LOC-001":{rag:"green",down:980,up:49,latency:8,  outage:null},
+  "LOC-002":{rag:"amber",down:88, up:18,latency:22, outage:"2026-05-30"},
+  "LOC-003":{rag:"red",  down:31, up:9, latency:64, outage:"2026-06-18"},
+  "LOC-004":{rag:"green",down:496,up:49,latency:10, outage:null}
+};
+
+const SERVICE = {
+  "LOC-001":{rag:"green",tickets:0,appt:"2025-11-02"},
+  "LOC-002":{rag:"amber",tickets:1,appt:"2026-06-01"},
+  "LOC-003":{rag:"red",  tickets:2,appt:"2026-06-19"},
+  "LOC-004":{rag:"green",tickets:0,appt:"2026-02-15"}
+};
+
+const PROVIDERS = {
+  "FTTP":         ["Aurora Telecom","BlueWave","Corelink","Meridian Net","Skyline Broadband"],
+  "HFC":          ["Aurora Telecom","BlueWave","Corelink","Meridian Net"],
+  "FTTN":         ["Aurora Telecom","Corelink","Vantage Connect"],
+  "FTTC":         ["BlueWave","Corelink","Meridian Net","Vantage Connect"],
+  "Fixed Wireless":["Aurora Telecom","Skyline Broadband"]
+};
+
+const TECH_LABELS = {
+  "FTTP":"Fibre to the Premises",
+  "HFC":"Hybrid Fibre Coaxial",
+  "FTTN":"Fibre to the Node",
+  "FTTC":"Fibre to the Curb",
+  "Fixed Wireless":"Fixed Wireless"
+};
+
+/* ══════════════════════════════ STATE ══════════════════════════════ */
+let currentLoc = null;
+let currentTech = null;
+let currentProduct = null;
+
+/* ══════════════════════════════ UTILS ══════════════════════════════ */
+function rag(r){ return `<span class="tx-rag tx-rag--${r}"><span class="tx-rag__dot"></span>${r.charAt(0).toUpperCase()+r.slice(1)}</span>`; }
+
+function connBadge(status){
+  const map = {
+    active:   {cls:"active",   icon:"✓", label:"Active subscriber"},
+    previous: {cls:"previous", icon:"◐", label:"Previously connected"},
+    never:    {cls:"never",    icon:"○", label:"Never connected"}
+  };
+  const m = map[status] || map.never;
+  return `<span class="tx-conn-badge tx-conn-badge--${m.cls}"><span class="tx-conn-badge__icon">${m.icon}</span>${m.label}</span>`;
+}
+
+function techTag(t){
+  return `<span class="tx-tech-tag">📡 ${t}<span style="color:var(--tx-muted);font-weight:400;margin-left:4px">— ${TECH_LABELS[t]||t}</span></span>`;
+}
+
+function fmtDate(d){ if(!d) return "None"; return new Date(d).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}); }
+
+function showToast(msg){
+  const t = document.getElementById('tx-toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+function showModal(title, body){
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = body;
+  document.getElementById('tx-modal').classList.add('open');
+  document.getElementById('tx-modal').querySelector('.tx-modal__close').focus();
+}
+
+function closeModal(){
+  document.getElementById('tx-modal').classList.remove('open');
+}
+
+/* ══════════════════════════════ PAGE 1 — BUILD ══════════════════════════════ */
+function buildPage1(){
+  const list = document.getElementById('p1-address-list');
+  list.innerHTML = '';
+  LOCATIONS.forEach(loc=>{
+    const el = document.createElement('div');
+    el.className = 'tx-address-item';
+    el.setAttribute('role','listitem');
+    el.setAttribute('tabindex','0');
+    el.setAttribute('aria-label',`${loc.address}, ${loc.suburb} ${loc.postcode}`);
+    el.innerHTML = `
+      <span class="tx-address-item__pin" aria-hidden="true">📍</span>
+      <div class="tx-address-item__text">
+        <div class="tx-address-item__street">${loc.address}</div>
+        <div class="tx-address-item__sub">${loc.suburb} ${loc.state} ${loc.postcode}</div>
+      </div>
+      <div class="tx-address-item__badge">${connBadge(loc.status)}</div>
+    `;
+    el.addEventListener('click',()=>goToResult(loc));
+    el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); goToResult(loc); } });
+    list.appendChild(el);
+  });
+}
+
+/* ══════════════════════════════ SEARCH ══════════════════════════════ */
+const searchInput = document.getElementById('p1-search');
+const suggestions = document.getElementById('p1-suggestions');
+const searchError = document.getElementById('p1-error');
+
+searchInput.addEventListener('input', function(){
+  const q = this.value.trim().toLowerCase();
+  searchError.hidden = true;
+  if(q.length < 1){ suggestions.classList.remove('open'); suggestions.innerHTML=''; return; }
+  const matches = LOCATIONS.filter(l=>
+    l.address.toLowerCase().includes(q) ||
+    l.suburb.toLowerCase().includes(q) ||
+    l.postcode.includes(q)
+  );
+  if(!matches.length){ suggestions.classList.remove('open'); suggestions.innerHTML=''; return; }
+  suggestions.innerHTML = matches.map(l=>`
+    <div class="tx-suggestion" role="option" tabindex="0" data-id="${l.id}">
+      <strong>${highlight(l.address+', '+l.suburb, q)}</strong>
+      <div class="tx-sug-meta">${l.state} ${l.postcode} · ${connBadge(l.status)}</div>
+    </div>
+  `).join('');
+  suggestions.classList.add('open');
+  suggestions.querySelectorAll('.tx-suggestion').forEach(s=>{
+    s.addEventListener('click',()=>{
+      const loc = LOCATIONS.find(l=>l.id===s.dataset.id);
+      suggestions.classList.remove('open');
+      searchInput.value = loc.address+', '+loc.suburb;
+      goToResult(loc);
+    });
+    s.addEventListener('keydown',e=>{ if(e.key==='Enter'){ s.click(); } });
+  });
+});
+
+function highlight(text, q){
+  return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'), '<strong>$1</strong>');
+}
+
+function handleSearch(){
+  const q = searchInput.value.trim().toLowerCase();
+  if(!q){
+    searchError.textContent = 'Please enter an address to search.';
+    searchError.hidden = false; searchInput.focus(); return;
+  }
+  const match = LOCATIONS.find(l=>
+    l.address.toLowerCase().includes(q) ||
+    l.suburb.toLowerCase().includes(q) ||
+    l.postcode.includes(q)
+  );
+  if(match){ suggestions.classList.remove('open'); goToResult(match); }
+  else {
+    searchError.textContent = "We couldn't find that address. Check the spelling or choose from the list below.";
+    searchError.hidden = false;
+    searchInput.classList.add('tx-field--error');
+    setTimeout(()=>searchInput.classList.remove('tx-field--error'), 2000);
+  }
+}
+
+searchInput.addEventListener('keydown',e=>{ if(e.key==='Enter') handleSearch(); });
+document.addEventListener('click',e=>{ if(!e.target.closest('.tx-autocomplete')) suggestions.classList.remove('open'); });
+
+/* ══════════════════════════════ NAVIGATION ══════════════════════════════ */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function goHome(){
+  showScreen('page1');
+  searchInput.value=''; searchError.hidden=true;
+  suggestions.classList.remove('open');
+}
+
+function goToResult(loc){
+  currentLoc = loc;
+  currentTech = TECHNOLOGY[loc.id];
+  showScreen('page2');
+  buildPage2(loc);
+}
+
+function goToPage3(mode, data){
+  showScreen('page3');
+  buildPage3(mode, data);
+  document.getElementById('p3-back').onclick = ()=>{ showScreen('page2'); };
+}
+
+/* ══════════════════════════════ PAGE 2 — BUILD ══════════════════════════════ */
+function buildPage2(loc){
+  // address strip
+  document.getElementById('p2-address-text').textContent = `${loc.address}, ${loc.suburb}`;
+  document.getElementById('p2-address-meta').textContent = `${loc.state} ${loc.postcode}`;
+  document.getElementById('p2-map').setAttribute('aria-label', `Map showing pin at ${loc.address}, ${loc.suburb}. Coordinates: ${loc.lat}, ${loc.lng}`);
+  document.getElementById('p2-coords').textContent = `${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)}`;
+
+  const content = document.getElementById('p2-content');
+  content.innerHTML = '';
+
+  if(loc.status === 'active'){
+    content.innerHTML = buildActivePage(loc);
+  } else {
+    content.innerHTML = buildNonActivePage(loc);
+  }
+
+  // Bind product card clicks
+  content.querySelectorAll('[data-action="product"]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const pid = btn.closest('[data-pid]').dataset.pid;
+      const tech = currentTech.tech;
+      const product = PRODUCTS[tech].find(p=>p.id===pid);
+      goToPage3('providers',{ loc, tech, product });
+    });
+  });
+
+  // Bind upgrade
+  content.querySelectorAll('[data-action="upgrade"]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const tech = currentTech.tech;
+      goToPage3('upgrade',{ loc, tech });
+    });
+  });
+
+  // Bind network detail
+  content.querySelectorAll('[data-action="network"]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      goToPage3('network',{ loc });
+    });
+  });
+}
+
+/* ── ACTIVE VIEW ── */
+function buildActivePage(loc){
+  const sub = SUBSCRIBERS[loc.id];
+  const net = NETWORK[loc.id];
+  const svc = SERVICE[loc.id];
+  const tech = TECHNOLOGY[loc.id];
+
+  return `
+    <!-- Connection status row -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+      ${connBadge(loc.status)}
+      ${techTag(tech.tech)}
+    </div>
+
+    <!-- Subscriber Card -->
+    <p class="tx-section-label">Your plan</p>
+    <div class="tx-card" style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+        <div>
+          <div style="font-size:13px;color:var(--tx-muted);margin-bottom:4px">Account reference</div>
+          <div style="font-size:18px;font-weight:700">${sub.ref}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:13px;color:var(--tx-muted);margin-bottom:4px">Connected since</div>
+          <div style="font-size:15px;font-weight:600">${fmtDate(sub.since)}</div>
+        </div>
+      </div>
+      <div class="tx-divider" style="margin:16px 0"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div>
+          <div style="font-size:13px;color:var(--tx-muted);margin-bottom:4px">Current plan</div>
+          <div style="font-size:20px;font-weight:700;color:var(--tx-blue)">${sub.product}</div>
+          <div style="font-size:13px;color:var(--tx-muted);margin-top:2px">${tech.tech} · Up to ${tech.max} Mbps</div>
+        </div>
+      </div>
+    </div>
+
+    ${sub.upgrade ? `
+    <div class="tx-upgrade-banner" style="cursor:pointer" data-action="upgrade" tabindex="0" role="button" aria-label="Upgrade your plan">
+      <div class="tx-upgrade-banner__icon">⚡</div>
+      <div class="tx-upgrade-banner__text">
+        <h3>You're eligible for an upgrade</h3>
+        <p>Faster plans are available at your address. View options →</p>
+      </div>
+    </div>` : ''}
+
+    <!-- Network Status -->
+    <p class="tx-section-label" style="margin-top:24px">Network status</p>
+    <div class="tx-card" style="margin-bottom:16px">
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Network health</span>
+        ${rag(net.rag)}
+      </div>
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Download sync</span>
+        <span style="font-weight:600">${net.down} <span style="color:var(--tx-muted);font-weight:400;font-size:13px">Mbps</span></span>
+      </div>
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Upload sync</span>
+        <span style="font-weight:600">${net.up} <span style="color:var(--tx-muted);font-weight:400;font-size:13px">Mbps</span></span>
+      </div>
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Latency</span>
+        <span style="font-weight:600">${net.latency} <span style="color:var(--tx-muted);font-weight:400;font-size:13px">ms</span></span>
+      </div>
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Last outage</span>
+        <span style="font-weight:600;color:${net.outage ? 'var(--tx-warning)':'var(--tx-success)'}">${fmtDate(net.outage)}</span>
+      </div>
+      <div style="margin-top:16px">
+        <button class="tx-btn tx-btn--ghost tx-btn--sm" data-action="network" aria-label="View full network details">View network details</button>
+      </div>
+    </div>
+
+    <!-- Service Status -->
+    <p class="tx-section-label">Service status</p>
+    <div class="tx-card">
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Service health</span>
+        ${rag(svc.rag)}
+      </div>
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Open tickets</span>
+        <span style="font-weight:600;color:${svc.tickets>0?'var(--tx-warning)':'var(--tx-success)'}">${svc.tickets === 0 ? 'None' : svc.tickets+' open'}</span>
+      </div>
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Last appointment</span>
+        <span style="font-weight:600">${fmtDate(svc.appt)}</span>
+      </div>
+    </div>
+  `;
+}
+
+/* ── NON-ACTIVE VIEW ── */
+function buildNonActivePage(loc){
+  const tech = TECHNOLOGY[loc.id];
+  const products = PRODUCTS[tech.tech] || [];
+  const providers = PROVIDERS[tech.tech] || [];
+
+  return `
+    <!-- Status row -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+      ${connBadge(loc.status)}
+      ${techTag(tech.tech)}
+    </div>
+
+    <div class="tx-info-chip" style="margin-bottom:24px">
+      <span class="tx-info-chip__icon">ℹ️</span>
+      <span>${providers.length} provider${providers.length!==1?'s':''} available at this address via ${tech.tech}</span>
+    </div>
+
+    <!-- Products -->
+    <p class="tx-section-label">Available plans</p>
+    <div class="tx-grid-2">
+      ${products.map(p=>`
+        <div class="tx-product-card" data-pid="${p.id}" tabindex="0" role="button" aria-label="View providers for ${p.name} plan — ${p.down} Mbps download">
+          <div>
+            <div class="tx-product-card__name">${p.name}</div>
+            <span class="tx-product-card__tech">${tech.tech}</span>
+          </div>
+          <div class="tx-product-card__speed">${p.down} <small>Mbps ↓</small></div>
+          <div class="tx-product-card__meta">${p.up} Mbps ↑ · Up to ${tech.max} Mbps on this connection</div>
+          <button class="tx-btn tx-btn--sm" data-action="product" aria-label="Choose ${p.name} plan">Choose this plan</button>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="tx-divider"></div>
+    <p class="tx-section-label" style="margin-bottom:12px">${providers.length} providers offer ${tech.tech} at this address</p>
+    <div class="tx-card">
+      ${providers.map(name=>`
+        <div class="tx-provider-row">
+          <div>
+            <div class="tx-provider-row__name">${name}</div>
+            <div class="tx-provider-row__plan">${tech.tech} · ${products.length} plan${products.length!==1?'s':''} available</div>
+          </div>
+          <button class="tx-btn tx-btn--ghost tx-btn--sm"
+            onclick="showModal('${name}','<strong>${name}</strong> offers ${tech.tech} plans at this address. To sign up, visit the provider\'s website or call their sales team.')"
+            aria-label="Sign up with ${name}">Sign up</button>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+/* ══════════════════════════════ PAGE 3 — BUILD ══════════════════════════════ */
+function buildPage3(mode, data){
+  const content = document.getElementById('p3-content');
+  content.innerHTML = '';
+
+  if(mode === 'providers'){
+    content.innerHTML = buildProvidersPage(data);
+  } else if(mode === 'network'){
+    content.innerHTML = buildNetworkPage(data);
+  } else if(mode === 'upgrade'){
+    content.innerHTML = buildUpgradePage(data);
+  }
+
+  // Bind sign-up buttons
+  content.querySelectorAll('[data-action="signup"]').forEach(btn=>{
+    const prov = btn.dataset.provider;
+    btn.addEventListener('click',()=>{
+      showModal(`Sign up with ${prov}`,`<strong>${prov}</strong> can set up your connection at this address. This is a prototype — no real submission will be made.`);
+    });
+  });
+}
+
+function buildProvidersPage({loc, tech, product}){
+  const providers = PROVIDERS[tech] || [];
+  return `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">
+      <span style="font-size:12px;color:var(--tx-muted)">${loc.address}, ${loc.suburb}</span>
+      ${connBadge(loc.status)}
+    </div>
+    <h1 style="font-size:26px;font-weight:700;margin-bottom:4px">${product.name} plan</h1>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap">
+      <span style="font-size:28px;font-weight:700;color:var(--tx-blue)">${product.down} <span style="font-size:14px;font-weight:500;color:var(--tx-muted)">Mbps ↓</span></span>
+      <span style="font-size:16px;color:var(--tx-muted)">${product.up} Mbps ↑</span>
+      <span class="tx-tech-tag">📡 ${tech}</span>
+    </div>
+
+    <p class="tx-section-label">${providers.length} provider${providers.length!==1?'s':''} for this plan</p>
+    <div class="tx-card">
+      ${providers.map(name=>`
+        <div class="tx-provider-row">
+          <div>
+            <div class="tx-provider-row__name">${name}</div>
+            <div class="tx-provider-row__plan">${product.name} · ${product.down}/${product.up} Mbps · ${tech}</div>
+          </div>
+          <button class="tx-btn tx-btn--sm tx-btn--aqua"
+            data-action="signup" data-provider="${name}"
+            aria-label="Sign up with ${name} for the ${product.name} plan">
+            Sign up
+          </button>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="tx-info-chip" style="margin-top:20px">
+      <span class="tx-info-chip__icon">💡</span>
+      <span>Provider count for ${tech}: <strong>${providers.length}</strong> — matches tool7_providers.json exactly.</span>
+    </div>
+  `;
+}
+
+function buildNetworkPage({loc}){
+  const net = NETWORK[loc.id];
+  const svc = SERVICE[loc.id];
+  const sub = SUBSCRIBERS[loc.id];
+  const tech = TECHNOLOGY[loc.id];
+  return `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">
+      <span style="font-size:12px;color:var(--tx-muted)">${loc.address}, ${loc.suburb}</span>
+      ${connBadge(loc.status)}
+    </div>
+    <h1 style="font-size:26px;font-weight:700;margin-bottom:24px">Network &amp; service details</h1>
+
+    <p class="tx-section-label">Network performance</p>
+    <div class="tx-card" style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px">
+        <span style="font-weight:700;font-size:16px">Network health</span>
+        ${rag(net.rag)}
+      </div>
+      <div class="tx-stat-row">
+        <div class="tx-stat">
+          <div class="tx-stat__val">${net.down}<span> Mbps</span></div>
+          <div class="tx-stat__label">Download sync</div>
+        </div>
+        <div class="tx-stat">
+          <div class="tx-stat__val">${net.up}<span> Mbps</span></div>
+          <div class="tx-stat__label">Upload sync</div>
+        </div>
+        <div class="tx-stat">
+          <div class="tx-stat__val">${net.latency}<span> ms</span></div>
+          <div class="tx-stat__label">Latency</div>
+        </div>
+      </div>
+      <div class="tx-divider" style="margin:16px 0"></div>
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Last outage detected</span>
+        <span style="font-weight:600;color:${net.outage?'var(--tx-warning)':'var(--tx-success)'}">${fmtDate(net.outage)}</span>
+      </div>
+    </div>
+
+    <p class="tx-section-label">Service records</p>
+    <div class="tx-card" style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px">
+        <span style="font-weight:700;font-size:16px">Service health</span>
+        ${rag(svc.rag)}
+      </div>
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Open support tickets</span>
+        <span style="font-weight:600;color:${svc.tickets>0?'var(--tx-warning)':'var(--tx-success)'}">${svc.tickets === 0 ? 'None' : svc.tickets}</span>
+      </div>
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Last technician appointment</span>
+        <span style="font-weight:600">${fmtDate(svc.appt)}</span>
+      </div>
+    </div>
+
+    <p class="tx-section-label">Connection summary</p>
+    <div class="tx-card">
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Technology</span>
+        <span class="tx-tech-tag" style="font-size:12px">📡 ${tech.tech}</span>
+      </div>
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Maximum speed</span>
+        <span style="font-weight:600">${tech.max} Mbps</span>
+      </div>
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Current plan</span>
+        <span style="font-weight:600">${sub.product}</span>
+      </div>
+      <div class="tx-status-row">
+        <span class="tx-status-row__label">Account reference</span>
+        <span style="font-weight:600;color:var(--tx-muted)">${sub.ref}</span>
+      </div>
+    </div>
+  `;
+}
+
+function buildUpgradePage({loc, tech}){
+  const sub = SUBSCRIBERS[loc.id];
+  const products = PRODUCTS[tech] || [];
+  const currentIdx = products.findIndex(p=>p.id===sub.productId);
+  const upgrades = products.slice(currentIdx+1);
+  return `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">
+      <span style="font-size:12px;color:var(--tx-muted)">${loc.address}, ${loc.suburb}</span>
+      ${connBadge(loc.status)}
+    </div>
+    <h1 style="font-size:26px;font-weight:700;margin-bottom:4px">Upgrade your plan</h1>
+    <p style="color:var(--tx-muted);margin-bottom:24px">You're currently on <strong>${sub.product}</strong>. The following faster plans are available on your ${tech} connection.</p>
+
+    <p class="tx-section-label">Upgrade options</p>
+    <div class="tx-grid-2">
+      ${upgrades.map(p=>`
+        <div class="tx-product-card" tabindex="0" role="button"
+          onclick="showModal('Upgrade to ${p.name}','This would upgrade your ${tech} connection to <strong>${p.down}/${p.up} Mbps</strong>. Contact your provider to complete the upgrade — this prototype does not submit real requests.')"
+          onkeydown="if(event.key==='Enter')this.click()"
+          aria-label="Upgrade to ${p.name} plan — ${p.down} Mbps download">
+          <div>
+            <div class="tx-product-card__name">${p.name}</div>
+            <span class="tx-product-card__tech">${tech}</span>
+          </div>
+          <div class="tx-product-card__speed">${p.down} <small>Mbps ↓</small></div>
+          <div class="tx-product-card__meta">${p.up} Mbps ↑ · Up to ${TECHNOLOGY[loc.id].max} Mbps on this connection</div>
+          <button class="tx-btn tx-btn--sm tx-btn--aqua">Select upgrade</button>
+        </div>
+      `).join('')}
+    </div>
+
+    ${upgrades.length===0?`<div class="tx-empty">
+      <div class="tx-empty__icon">✓</div>
+      <div class="tx-empty__title">You're already on the fastest plan</div>
+    </div>`:''}
+  `;
+}
+
+/* ══════════════════════════════ INIT ══════════════════════════════ */
+buildPage1();
+
+// Keyboard accessibility for product cards
+document.addEventListener('keydown', e=>{
+  if(e.target.classList.contains('tx-address-item') && e.key===' ') e.preventDefault();
+});
+</script>
+</body>
+</html>
