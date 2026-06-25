@@ -4,24 +4,77 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Telco X — Address result</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/components.css" />
 </head>
 <body>
-  <header class="tx-header"><span class="tx-logo">TELCO&nbsp;X</span></header>
-  <main class="tx-container">
-    <a class="tx-btn tx-btn--ghost" href="/index.html">&larr; Back to search</a>
-    <h1 id="address">Address result</h1>
+  <header class="tx-header">
+    <a href="/index.html" class="tx-logo" aria-label="Telco X — home">TELCO&nbsp;<span>X</span></a>
+    <span class="tx-header-right">Service Availability</span>
+  </header>
 
-    <!-- TODO (Page 2):
-         1. Read ?id= from the URL, fetch /api/locations/:id, show address + map pin (coordinates).
-         2. Branch on connection_status:
-            - active   -> show subscriber info (Tools 4,5,6) + product set (Tools 2,3). Upgrade card only if upgrade_eligible.
-            - previous/never -> show valid product choices for the technology (Tools 2,3). No network/service records.
-         3. RAG badges for network/service status (use .tx-rag--green/amber/red). -->
-    <div id="map" class="tx-card"><span class="tx-muted">Map pin goes here (use latitude/longitude from Tool 1).</span></div>
-    <div id="content" class="tx-card"><span class="tx-muted">Result content — build me.</span></div>
+  <main class="tx-container">
+    <a class="tx-back" href="/index.html" aria-label="Back to address search">← Back to search</a>
+
+    <!-- Address strip (BR-06) -->
+    <div class="tx-address-strip" aria-live="polite">
+      <div class="tx-address-strip__pin" aria-hidden="true">📍</div>
+      <div class="tx-address-strip__text">
+        <h1 id="address-heading" style="font-size:20px;font-weight:700;color:white;margin-bottom:4px">
+          Loading…
+        </h1>
+        <p id="address-meta" style="color:rgba(255,255,255,.65);font-size:14px"></p>
+      </div>
+    </div>
+
+    <!-- Map pin (BR-07) -->
+    <div class="tx-map" id="map"
+         role="img"
+         aria-label="Map showing address location">
+      <div class="tx-map__grid"></div>
+      <div class="tx-map__roads"></div>
+      <div class="tx-map__pin" aria-hidden="true">
+        <div class="tx-map__pin-head"><div class="tx-map__pin-inner"></div></div>
+      </div>
+      <div class="tx-map__label"></div>
+    </div>
+
+    <div style="height:24px"></div>
+
+    <!-- Dynamic content injected by result.js -->
+    <div id="content" aria-live="polite"></div>
   </main>
+
+  <!-- Modal (sign-up / upgrade confirmations) -->
+  <div id="tx-modal" class="tx-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="tx-modal">
+      <button id="modal-close" class="tx-modal__close" aria-label="Close">✕</button>
+      <div class="tx-modal__title" id="modal-title"></div>
+      <div class="tx-modal__body" id="modal-body"></div>
+      <button class="tx-btn tx-btn--full" onclick="document.getElementById('tx-modal').hidden=true">Done</button>
+    </div>
+  </div>
+
   <script src="/js/api.js"></script>
   <script src="/js/result.js"></script>
+  <script>
+    // Modal close helpers
+    document.getElementById('modal-close').addEventListener('click', () => {
+      document.getElementById('tx-modal').hidden = true;
+    });
+    document.getElementById('tx-modal').addEventListener('click', e => {
+      if (e.target === e.currentTarget) e.currentTarget.hidden = true;
+    });
+    function showModal(title, body) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-body').innerHTML = body;
+      const m = document.getElementById('tx-modal');
+      m.hidden = false;
+      m.removeAttribute('hidden');
+      m.classList.add('open');
+      document.getElementById('modal-close').focus();
+    }
+  </script>
 </body>
 </html>

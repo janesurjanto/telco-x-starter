@@ -4,21 +4,56 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Telco X — Details</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/components.css" />
 </head>
 <body>
-  <header class="tx-header"><span class="tx-logo">TELCO&nbsp;X</span></header>
-  <main class="tx-container">
-    <a class="tx-btn tx-btn--ghost" href="#" id="back">&larr; Back</a>
-    <h1 id="title">Details</h1>
+  <header class="tx-header">
+    <a href="/index.html" class="tx-logo" aria-label="Telco X — home">TELCO&nbsp;<span>X</span></a>
+    <span class="tx-header-right">Service Availability</span>
+  </header>
 
-    <!-- TODO (Page 3) — two modes:
-         DETAILS mode  (?id=&mode=details)  -> full subscriber view for an ACTIVE location (Tools 4,5,6).
-         PROVIDERS mode (?id=&mode=providers&tech=…&product=…) -> provider list from Tool 7.
-         AC8: provider count + names must match Tool 7 exactly. -->
-    <div id="content" class="tx-card"><span class="tx-muted">Detail / provider content — build me.</span></div>
+  <main class="tx-container">
+    <!-- back uses history.back() in details.js so the result page state is preserved (BR-19/20) -->
+    <button class="tx-back" id="back" aria-label="Back to address result">← Back to result</button>
+
+    <h1 id="title" style="font-size:26px;font-weight:700;margin-bottom:24px">Details</h1>
+
+    <!-- Dynamic content injected by details.js -->
+    <div id="content" aria-live="polite"></div>
   </main>
+
+  <!-- Modal (sign-up / upgrade confirmations) -->
+  <div id="tx-modal" class="tx-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="tx-modal">
+      <button id="modal-close" class="tx-modal__close" aria-label="Close">✕</button>
+      <div class="tx-modal__title" id="modal-title"></div>
+      <div class="tx-modal__body" id="modal-body"></div>
+      <button class="tx-btn tx-btn--full" onclick="closeModal()">Done</button>
+    </div>
+  </div>
+
   <script src="/js/api.js"></script>
   <script src="/js/details.js"></script>
+  <script>
+    function closeModal() {
+      const m = document.getElementById('tx-modal');
+      m.hidden = true;
+      m.classList.remove('open');
+    }
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    document.getElementById('tx-modal').addEventListener('click', e => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+    function showModal(title, body) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-body').innerHTML = body;
+      const m = document.getElementById('tx-modal');
+      m.hidden = false;
+      m.classList.add('open');
+      document.getElementById('modal-close').focus();
+    }
+  </script>
 </body>
 </html>
