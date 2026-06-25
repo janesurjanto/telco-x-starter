@@ -272,7 +272,7 @@ describe('GET /api/technology/:tech/providers', () => {
   });
 });
 
-// ── Status mix verification (AC10) ────────────────────────────────────────────
+// ── Dataset status mix verification (AC10) ────────────────────────────────────
 
 describe('Dataset status mix (AC10 — at least one active + one non-active)', () => {
   it('has at least one active location', async () => {
@@ -295,5 +295,83 @@ describe('Dataset status mix (AC10 — at least one active + one non-active)', (
     expect(active).toHaveLength(4);
     expect(previous).toHaveLength(3);
     expect(never).toHaveLength(3);
+  });
+});
+
+// ── Page 3 mode coverage ──────────────────────────────────────────────────────
+// These tests confirm the API contracts that back each ?mode= on details.html
+
+describe('Page 3 mode=details — all three Tools (4, 5, 6) respond for active', () => {
+  it('subscriber + network + service all return 200 for LOC-001', async () => {
+    const [sub, net, svc] = await Promise.all([
+      request(app).get('/api/locations/LOC-001/subscriber'),
+      request(app).get('/api/locations/LOC-001/network'),
+      request(app).get('/api/locations/LOC-001/service')
+    ]);
+    expect(sub.status).toBe(200);
+    expect(net.status).toBe(200);
+    expect(svc.status).toBe(200);
+    // subscriber has all fields details mode renders
+    expect(sub.body.account_ref).toBeDefined();
+    expect(sub.body.current_product_name).toBeDefined();
+    expect(sub.body.connected_since).toBeDefined();
+  });
+});
+
+describe('Page 3 mode=providers — Tool 7 wired correctly', () => {
+  it('providers endpoint returns array of strings', async () => {
+    const res = await request(app).get('/api/technology/FTTP/providers');
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    res.body.forEach(p => expect(typeof p).toBe('string'));
+  });
+
+  it('Fixed Wireless providers reachable via URL-encoded tech name', async () => {
+    const res = await request(app).get('/api/technology/Fixed%20Wireless/providers');
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveLength(2);
+  });
+});
+
+describe('Page 3 mode=network — Tools 5 + 6 respond correctly', () => {
+  it('network record contains all fields the network view renders', async () => {
+    const res = await request(app).get('/api/locations/LOC-001/network');
+    expect(res.status).toBe(200);
+    expect(res.body.network_status).toBeDefined();
+    expect(res.body.sync_down_mbps).toBeDefined();
+    expect(res.body.sync_up_mbps).toBeDefined();
+    expect(res.body.latency_ms).toBeDefined();
+    // last_outage may be null (valid)
+    expect('last_outage' in res.body).toBe(true);
+  });
+
+  it('service record contains all fields the network view renders', async () => {
+    const res = await request(app).get('/api/locations/LOC-001/service');
+    expect(res.status).toBe(200);
+    expect(res.body.service_health).toBeDefined();
+    expect(typeof res.body.open_tickets).toBe('number');
+    expect(res.body.last_appointment).toBeDefined();
+  });
+});
+
+describe('Page 3 mode=upgrade — Tool 3 products respond for each active tech', () => {
+  const activeTechs = ['FTTP', 'HFC', 'FTTN'];  // techs used by LOC-001..003
+
+  activeTechs.forEach(tech => {
+    it(`returns products for ${tech} with product_id fields`, async () => {
+      const res = await request(app).get(`/api/technology/${tech}/products`);
+      expect(res.status).toBe(200);
+      expect(res.body.length).toBeGreaterThan(0);
+      res.body.forEach(p => expect(p.product_id).toBeDefined());
+    });
+  });
+});
+
+describe('Back button — history.back() contract: no server-side impact', () => {
+  it('result page location endpoint is still reachable after navigating away', async () => {
+    // Simulates: Page 2 → Page 3 → back → Page 2 still loads
+    const res = await request(app).get('/api/locations/LOC-001');
+    expect(res.status).toBe(200);
+    expect(res.body.id).toBe('LOC-001');
   });
 });
