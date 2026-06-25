@@ -1,0 +1,10 @@
+{
+  "tool": "Tool 5 — Network Records",
+  "description": "ACTIVE locations only. Network health uses RAG status (green/amber/red). Do not show network records for a non-active location.",
+  "network": [
+    { "location_id": "LOC-001", "network_status": "green", "sync_down_mbps": 980, "sync_up_mbps": 49, "latency_ms": 8, "last_outage": null },
+    { "location_id": "LOC-002", "network_status": "amber", "sync_down_mbps": 88, "sync_up_mbps": 18, "latency_ms": 22, "last_outage": "2026-05-30" },
+    { "location_id": "LOC-003", "network_status": "red", "sync_down_mbps": 31, "sync_up_mbps": 9, "latency_ms": 64, "last_outage": "2026-06-18" },
+    { "location_id": "LOC-004", "network_status": "green", "sync_down_mbps": 496, "sync_up_mbps": 49, "latency_ms": 10, "last_outage": null }
+  ]
+}

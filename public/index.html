@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Telco X — Check your address</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <header class="tx-header"><span class="tx-logo">TELCO&nbsp;X</span></header>
+  <main class="tx-container">
+    <h1>Check what's available at your address</h1>
+    <p class="tx-muted">Search one of the known addresses, or pick from the list below.</p>
+
+    <label for="search" class="tx-muted">Address search</label>
+    <input id="search" class="tx-field" type="search" placeholder="e.g. Brunswick, 3056, Eucalyptus…" aria-describedby="search-error" />
+    <p id="search-error" class="tx-error" role="alert" hidden></p>
+
+    <div id="results" aria-live="polite"></div>
+  </main>
+  <script src="/js/api.js"></script>
+  <script src="/js/search.js"></script>
+</body>
+</html>

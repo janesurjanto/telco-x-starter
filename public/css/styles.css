@@ -1,0 +1,44 @@
+/* Telco X — design tokens + base components.
+   This is a STARTER design system. UX: extend these tokens and components,
+   and review for accessibility (contrast, focus states, labels). */
+:root {
+  --tx-bg: #f7f8fa;
+  --tx-surface: #ffffff;
+  --tx-ink: #1b1f24;
+  --tx-muted: #5b6470;
+  --tx-border: #e1e5ea;
+  --tx-primary: #4338ca;       /* indigo — Telco X brand, deliberately NOT NBN/RMIT */
+  --tx-primary-ink: #ffffff;
+  --tx-radius: 12px;
+  --tx-shadow: 0 1px 3px rgba(20,24,33,.08), 0 4px 12px rgba(20,24,33,.05);
+  /* Operational RAG (status) — distinct in MEANING from the Three-Tier framework */
+  --rag-green: #1f9d57;
+  --rag-amber: #c98a00;
+  --rag-red: #d23f3f;
+  --tx-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--tx-font); color: var(--tx-ink); background: var(--tx-bg); line-height: 1.5; }
+.tx-container { max-width: 760px; margin: 0 auto; padding: 24px 16px 64px; }
+.tx-header { display: flex; align-items: center; gap: 10px; padding: 16px; }
+.tx-logo { font-weight: 700; letter-spacing: .5px; color: var(--tx-primary); }
+h1 { font-size: 1.5rem; margin: .2em 0 .6em; }
+h2 { font-size: 1.15rem; margin: 1.2em 0 .5em; }
+.tx-card { background: var(--tx-surface); border: 1px solid var(--tx-border); border-radius: var(--tx-radius);
+  box-shadow: var(--tx-shadow); padding: 16px; margin: 12px 0; }
+.tx-card--link { cursor: pointer; }
+.tx-card--link:hover { border-color: var(--tx-primary); }
+.tx-field { width: 100%; padding: 12px 14px; font-size: 1rem; border: 1px solid var(--tx-border);
+  border-radius: var(--tx-radius); background: var(--tx-surface); }
+.tx-field:focus { outline: 2px solid var(--tx-primary); outline-offset: 1px; }
+.tx-btn { display: inline-block; padding: 11px 18px; font-size: 1rem; font-weight: 600; cursor: pointer;
+  border: none; border-radius: var(--tx-radius); background: var(--tx-primary); color: var(--tx-primary-ink); }
+.tx-btn--ghost { background: transparent; color: var(--tx-primary); border: 1px solid var(--tx-primary); }
+.tx-muted { color: var(--tx-muted); }
+.tx-error { color: var(--rag-red); font-weight: 600; }
+.tx-rag { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: .85rem; }
+.tx-rag::before { content: ""; width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.tx-rag--green::before { background: var(--rag-green); }
+.tx-rag--amber::before { background: var(--rag-amber); }
+.tx-rag--red::before   { background: var(--rag-red); }
+@media (max-width: 480px) { .tx-container { padding: 16px 12px 56px; } h1 { font-size: 1.3rem; } }

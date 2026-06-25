@@ -1,0 +1,32 @@
+{
+  "tool": "Tool 3 — Products",
+  "description": "Speed-tier catalogue keyed by technology. Select the product set using the technology from Tool 2.",
+  "products_by_technology": {
+    "FTTP": [
+      { "product_id": "P-FTTP-50", "name": "Essential", "down_mbps": 50, "up_mbps": 20 },
+      { "product_id": "P-FTTP-100", "name": "Family", "down_mbps": 100, "up_mbps": 20 },
+      { "product_id": "P-FTTP-250", "name": "Power", "down_mbps": 250, "up_mbps": 25 },
+      { "product_id": "P-FTTP-500", "name": "Power Plus", "down_mbps": 500, "up_mbps": 50 },
+      { "product_id": "P-FTTP-1000", "name": "Ultra", "down_mbps": 1000, "up_mbps": 50 }
+    ],
+    "HFC": [
+      { "product_id": "P-HFC-50", "name": "Essential", "down_mbps": 50, "up_mbps": 20 },
+      { "product_id": "P-HFC-100", "name": "Family", "down_mbps": 100, "up_mbps": 20 },
+      { "product_id": "P-HFC-250", "name": "Power", "down_mbps": 250, "up_mbps": 25 }
+    ],
+    "FTTN": [
+      { "product_id": "P-FTTN-25", "name": "Basic", "down_mbps": 25, "up_mbps": 5 },
+      { "product_id": "P-FTTN-50", "name": "Essential", "down_mbps": 50, "up_mbps": 20 },
+      { "product_id": "P-FTTN-100", "name": "Family", "down_mbps": 100, "up_mbps": 40 }
+    ],
+    "FTTC": [
+      { "product_id": "P-FTTC-50", "name": "Essential", "down_mbps": 50, "up_mbps": 20 },
+      { "product_id": "P-FTTC-100", "name": "Family", "down_mbps": 100, "up_mbps": 20 },
+      { "product_id": "P-FTTC-250", "name": "Power", "down_mbps": 250, "up_mbps": 25 }
+    ],
+    "Fixed Wireless": [
+      { "product_id": "P-FW-50", "name": "Essential", "down_mbps": 50, "up_mbps": 20 },
+      { "product_id": "P-FW-100", "name": "Family", "down_mbps": 100, "up_mbps": 20 }
+    ]
+  }
+}

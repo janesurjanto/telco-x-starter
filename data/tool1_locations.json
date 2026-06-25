@@ -1,0 +1,16 @@
+{
+  "tool": "Tool 1 — Locations",
+  "description": "Address registry with coordinates and connection status. Drives search, map pin, and the subscriber branch.",
+  "locations": [
+    { "id": "LOC-001", "address": "12 Marngo Street", "suburb": "Brunswick", "state": "VIC", "postcode": "3056", "latitude": -37.7665, "longitude": 144.9596, "connection_status": "active" },
+    { "id": "LOC-002", "address": "88 Eucalyptus Drive", "suburb": "Carlton", "state": "VIC", "postcode": "3053", "latitude": -37.8001, "longitude": 144.9670, "connection_status": "active" },
+    { "id": "LOC-003", "address": "5 Wattle Court", "suburb": "Fitzroy", "state": "VIC", "postcode": "3065", "latitude": -37.7980, "longitude": 144.9780, "connection_status": "active" },
+    { "id": "LOC-004", "address": "240 Riverside Esplanade", "suburb": "Docklands", "state": "VIC", "postcode": "3008", "latitude": -37.8150, "longitude": 144.9460, "connection_status": "active" },
+    { "id": "LOC-005", "address": "17 Banksia Lane", "suburb": "Northcote", "state": "VIC", "postcode": "3070", "latitude": -37.7700, "longitude": 144.9990, "connection_status": "previous" },
+    { "id": "LOC-006", "address": "9 Gumtree Parade", "suburb": "Preston", "state": "VIC", "postcode": "3072", "latitude": -37.7410, "longitude": 145.0000, "connection_status": "previous" },
+    { "id": "LOC-007", "address": "134 Harbour View Road", "suburb": "Williamstown", "state": "VIC", "postcode": "3016", "latitude": -37.8640, "longitude": 144.8970, "connection_status": "never" },
+    { "id": "LOC-008", "address": "22 Coastal Way", "suburb": "St Kilda", "state": "VIC", "postcode": "3182", "latitude": -37.8680, "longitude": 144.9810, "connection_status": "never" },
+    { "id": "LOC-009", "address": "6 Highland Terrace", "suburb": "Kew", "state": "VIC", "postcode": "3101", "latitude": -37.8060, "longitude": 145.0310, "connection_status": "previous" },
+    { "id": "LOC-010", "address": "301 Parkland Avenue", "suburb": "Richmond", "state": "VIC", "postcode": "3121", "latitude": -37.8230, "longitude": 144.9980, "connection_status": "never" }
+  ]
+}

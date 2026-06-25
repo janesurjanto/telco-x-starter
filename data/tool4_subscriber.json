@@ -1,0 +1,10 @@
+{
+  "tool": "Tool 4 — Subscriber Records",
+  "description": "ACTIVE locations only. Current product, account reference (non-PII), connection date, and upgrade eligibility. Do not render an upgrade card when upgrade_eligible is false.",
+  "subscribers": [
+    { "location_id": "LOC-001", "account_ref": "ACC-7741", "current_product_id": "P-FTTP-1000", "current_product_name": "Ultra", "connected_since": "2021-03-14", "upgrade_eligible": false },
+    { "location_id": "LOC-002", "account_ref": "ACC-8820", "current_product_id": "P-HFC-100", "current_product_name": "Family", "connected_since": "2022-09-02", "upgrade_eligible": true },
+    { "location_id": "LOC-003", "account_ref": "ACC-3155", "current_product_id": "P-FTTN-50", "current_product_name": "Essential", "connected_since": "2020-06-21", "upgrade_eligible": true },
+    { "location_id": "LOC-004", "account_ref": "ACC-9032", "current_product_id": "P-FTTP-500", "current_product_name": "Power Plus", "connected_since": "2023-01-11", "upgrade_eligible": false }
+  ]
+}

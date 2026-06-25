@@ -1,0 +1,16 @@
+{
+  "tool": "Tool 2 — Technology",
+  "description": "Access technology per location. Used to select the valid product set from Tool 3.",
+  "technology": [
+    { "location_id": "LOC-001", "technology": "FTTP", "max_speed_mbps": 1000 },
+    { "location_id": "LOC-002", "technology": "HFC", "max_speed_mbps": 250 },
+    { "location_id": "LOC-003", "technology": "FTTN", "max_speed_mbps": 100 },
+    { "location_id": "LOC-004", "technology": "FTTP", "max_speed_mbps": 1000 },
+    { "location_id": "LOC-005", "technology": "FTTC", "max_speed_mbps": 250 },
+    { "location_id": "LOC-006", "technology": "HFC", "max_speed_mbps": 250 },
+    { "location_id": "LOC-007", "technology": "FTTP", "max_speed_mbps": 1000 },
+    { "location_id": "LOC-008", "technology": "Fixed Wireless", "max_speed_mbps": 100 },
+    { "location_id": "LOC-009", "technology": "FTTN", "max_speed_mbps": 100 },
+    { "location_id": "LOC-010", "technology": "FTTC", "max_speed_mbps": 250 }
+  ]
+}

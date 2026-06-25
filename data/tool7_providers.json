@@ -1,0 +1,11 @@
+{
+  "tool": "Tool 7 — Providers",
+  "description": "Retail providers keyed by technology. Provider count and names shown on Page 3 must match this file exactly.",
+  "providers_by_technology": {
+    "FTTP": ["Aurora Telecom", "BlueWave", "Corelink", "Meridian Net", "Skyline Broadband"],
+    "HFC": ["Aurora Telecom", "BlueWave", "Corelink", "Meridian Net"],
+    "FTTN": ["Aurora Telecom", "Corelink", "Vantage Connect"],
+    "FTTC": ["BlueWave", "Corelink", "Meridian Net", "Vantage Connect"],
+    "Fixed Wireless": ["Aurora Telecom", "Skyline Broadband"]
+  }
+}

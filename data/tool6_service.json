@@ -1,0 +1,10 @@
+{
+  "tool": "Tool 6 — Service Records",
+  "description": "ACTIVE locations only. Open tickets, last appointment, and service health (RAG). Do not show service records for a non-active location.",
+  "service": [
+    { "location_id": "LOC-001", "open_tickets": 0, "last_appointment": "2025-11-02", "service_health": "green" },
+    { "location_id": "LOC-002", "open_tickets": 1, "last_appointment": "2026-06-01", "service_health": "amber" },
+    { "location_id": "LOC-003", "open_tickets": 2, "last_appointment": "2026-06-19", "service_health": "red" },
+    { "location_id": "LOC-004", "open_tickets": 0, "last_appointment": "2026-02-15", "service_health": "green" }
+  ]
+}

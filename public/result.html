@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Telco X — Address result</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <header class="tx-header"><span class="tx-logo">TELCO&nbsp;X</span></header>
+  <main class="tx-container">
+    <a class="tx-btn tx-btn--ghost" href="/index.html">&larr; Back to search</a>
+    <h1 id="address">Address result</h1>
+
+    <!-- TODO (Page 2):
+         1. Read ?id= from the URL, fetch /api/locations/:id, show address + map pin (coordinates).
+         2. Branch on connection_status:
+            - active   -> show subscriber info (Tools 4,5,6) + product set (Tools 2,3). Upgrade card only if upgrade_eligible.
+            - previous/never -> show valid product choices for the technology (Tools 2,3). No network/service records.
+         3. RAG badges for network/service status (use .tx-rag--green/amber/red). -->
+    <div id="map" class="tx-card"><span class="tx-muted">Map pin goes here (use latitude/longitude from Tool 1).</span></div>
+    <div id="content" class="tx-card"><span class="tx-muted">Result content — build me.</span></div>
+  </main>
+  <script src="/js/api.js"></script>
+  <script src="/js/result.js"></script>
+</body>
+</html>
